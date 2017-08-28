@@ -1,15 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "utils.h"
 
+unsigned long start;
+uint32_t frame_id;
+
 // process chunk and send it
-void run(char *buf, size_t len) {
+void run(char *buf, size_t len, uint32_t frame_id) {
+	struct message m;
+	create_message(&m, buf, len, frame_id);
+	send_message(&m);
 }
 
 int main(int argc, char **argv) {
-	if (argc != 2) {
-		printf("Usage: %s <input-file>\n", argv[0]);
+	if (argc != 3) {
+		printf("Usage: %s <input-file> <start>\n", argv[0]);
 		exit(1);
 	}
 
@@ -19,13 +26,16 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 
+	start = atol(argv[2]);
+	consume_time(start);
 	printf("[S] INFO: Sender starting\n");
 
 	// Read chunks from input file and send across covert channel
 	size_t nread;
+	frame_id = 0;
 	char buf[MAX_MSG_CHARS];
 	while ( (nread = fread(buf, 1, MAX_MSG_CHARS, in)) > 0) {
-		run(buf, nread);
+		run(buf, nread, frame_id);
 	}
 
 	fclose(in);

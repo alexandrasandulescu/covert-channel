@@ -5,6 +5,8 @@
 
 #include "utils.h"
 
+unsigned long start;
+
 void run(char *buf, size_t *len) {
 	// receive buffer across covert channel
 	strncpy(buf, "ANA", 4);
@@ -12,8 +14,8 @@ void run(char *buf, size_t *len) {
 }
 
 int main(int argc, char **argv) {
-	if (argc != 2) {
-		printf("Usage: %s <output-file>\n", argv[0]);
+	if (argc != 3) {
+		printf("Usage: %s <output-file> <start>\n", argv[0]);
 		exit(1);
 	}
 
@@ -23,6 +25,8 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 
+	start = atol(argv[2]);
+	consume_time(start);
 	printf("[R] INFO: Receiver starting\n");
 
 	int times = 0;
