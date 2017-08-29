@@ -1,16 +1,24 @@
-objects := utils.o crc32.o
+objects = utils.o crc32.o
+current_dir = $(shell pwd)
 
-all: $(objects) sender receiver
+CFLAGS = -g
+LDFLAGS = -L/home/alex/covert-channel
+LINK = -lutils
+
+all: libutils.a sender receiver
 
 sender: sender.o
-	$(CC) $(CFLAGS) $(objects) sender.c -o $@
+	$(CC) $(CFLAGS) sender.o $(LDFLAGS) -o $@ $(LINK)
 
 receiver: receiver.o
-	$(CC) $(CFLAGS) $(objects) receiver.c -o $@
+	$(CC) $(CFLAGS) receiver.o $(LDFLAGS) -o $@ $(LINK)
+
+libutils.a: $(objects)
+	$(AR) rcs $@ $^
 
 %.o:%.c
-	$(CC) $(CFLAGS) -c $<
+	$(CC) -g -c $<
 
 .PHONY:clean
 clean:
-	$(RM) $(objects) sender.o receiver.o sender receiver
+	$(RM) $(objects) sender.o receiver.o *.a sender receiver

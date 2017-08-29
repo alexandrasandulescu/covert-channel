@@ -26,9 +26,10 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 
-	start = atol(argv[2]);
+	start = atol(argv[2]) * 1000000L;
+	unsigned long quantum = get_rr_time_quantum();
+	printf("[S] INFO: Sender starting. Quantum: %lu\n", quantum);
 	consume_time(start);
-	printf("[S] INFO: Sender starting\n");
 
 	// Read chunks from input file and send across covert channel
 	size_t nread;
