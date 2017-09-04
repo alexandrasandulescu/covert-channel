@@ -1,0 +1,26 @@
+Tema 1
+
+Am implementat un protocol de tipul start stop cu mesaje
+de structura:
+payload, length, frame_no, crc
+
+Transmisia si receptia mesajelor:
+folosind ./time, am aflat cuanta de timp configurata pe vm
+Am configurat OPS sa fie egal cu numarul de operatii care
+se executa in timpul unei singure cuante
+
+protocol:
+send 1:								send 0:
+TASK_TIME / 2   TASK_TIME / 2		TASK_TIME
+..............|---------------		--------------------
+ (run)			(sleep)					(sleep)
+
+recv 1:								recv 0:
+TASK_TIME / 2   TASK_TIME / 2		TASK_TIME / 2  TASK_TIME / 2
+--------------|..............		..............|-------------
+(sleep)			(run)					(run)			(sleep)
+
+if 1 is sent, sender runs for TASK_TIME/2 and receiver sleeps for TASK_TIME /2
+After TASK_TIME / 2, receiver starts running the task that waits in queue
+
+If 0 in sent, then receiver task will get the cpu immediately.
